@@ -8,15 +8,16 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 $isRootDir = !isset($_GET['dir']) || $_GET['dir'] === '.';
 
-// Get the current directory from the URL, default to 'uploads'
+// Obtenemos el directorio actual de la URL, por defecto será uploads
 $currentDir = isset($_GET['dir']) ? 'uploads/' . urldecode($_GET['dir']) : 'uploads/';
 
-// Ensure the directory is within 'uploads'
+// Nos aeguramos que el directorio esté dentro de 'uploads'
 if (strpos(realpath($currentDir), realpath('uploads')) !== 0) {
     die('Invalid directory.');
 }
 
-// Get directories and files
+
+// Obtenemos los directorios y archivos
 $items = scandir($currentDir);
 $directories = [];
 $files = [];

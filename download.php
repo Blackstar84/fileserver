@@ -6,17 +6,17 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// Enable error reporting for debugging
+// Para verificar los errores en el servidor, quitar esto al poner en producción
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $filesToDownload = [];
 
-// Function to recursively get all files in a directory
+// Función para obtener los archivos del directorio de manera recursiva
 function getFilesInDirectory($dir) {
     $files = [];
-    if (!is_dir($dir)) {
-        // Directory does not exist
+    if (!is_dir($dir)) {        
+        // Mensaje si el directorio no existe
         echo "Directory does not exist: " . htmlspecialchars($dir) . "<br>";
         return $files;
     }
@@ -32,7 +32,8 @@ function getFilesInDirectory($dir) {
     return $files;
 }
 
-// Collect selected files
+
+// Obtenemos los archivos seleccionados
 if (isset($_POST['files'])) {
     foreach ($_POST['files'] as $file) {
         $decodedFile = urldecode($file);
@@ -45,7 +46,8 @@ if (isset($_POST['files'])) {
     }
 }
 
-// Collect selected folders and their contents
+
+// Obtenemos las carpetas seleccionadas y sus contenidos
 if (isset($_POST['folders'])) {
     foreach ($_POST['folders'] as $folder) {
         $decodedFolder = urldecode($folder);
@@ -58,7 +60,8 @@ if (isset($_POST['folders'])) {
     }
 }
 
-// Create a ZIP file with the selected files
+
+// Creamos un archivo ZIP con los archivos seleccionados
 $zip = new ZipArchive();
 $zipFileName = 'downloads.zip';
 
@@ -66,10 +69,11 @@ if ($zip->open($zipFileName, ZipArchive::CREATE) !== TRUE) {
     exit("Unable to open <$zipFileName>\n");
 }
 
-// Add files to the ZIP archive
+
+// Agregamos los archivos al ZIP
 foreach ($filesToDownload as $file) {
     if (file_exists($file)) {
-        // Get the relative path to maintain directory structure
+        // Obtenemos la ruta relativa para mantener la estructura del directorio
         $relativePath = substr($file, strlen(realpath('uploads/')) + 1);
         $zip->addFile($file, $relativePath);
     } else {
@@ -79,24 +83,24 @@ foreach ($filesToDownload as $file) {
 
 $zip->close();
 
-// Ensure the ZIP file was created
+// Verificamos que el archivo ZIP haya sido creado 
 if (!file_exists($zipFileName)) {
     exit("Failed to create the ZIP file.\n");
 }
 
-// Set headers to download the ZIP file
+// Ponemos el header a la descarga del archivo ZIP
 header('Content-Type: application/zip');
 header('Content-Disposition: attachment; filename=' . basename($zipFileName));
 header('Content-Length: ' . filesize($zipFileName));
 
-// Clear output buffer to prevent any extra content
+// Limpiamos el buffer del output para prevenir cualquier contenido extra
 ob_clean();
 flush();
 
-// Send the ZIP file to the browser
+// Enviamos el archivo ZIP al navegador
 readfile($zipFileName);
 
-// Delete the ZIP file after download
+// Borramos el archivo ZIP después de descargarlo
 unlink($zipFileName);
 
 exit;
