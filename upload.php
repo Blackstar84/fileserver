@@ -6,14 +6,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// Check if the user has the required permissions
-/* if (!isset($_SESSION['role']) || !in_array('uploader', explode(',', $_SESSION['role']))) {
-    $_SESSION['error_message'] = "Acceso Denegado. Solo los usuarios con permiso pueden acceder a esta página.";
-    header("Location: 403.php");
-    exit;
-} */
-
-
 // Función para obtener los subdirectorios dentro del directorio 'uploads'
 function getSubdirectories($dir) {
     $subdirs = [];
@@ -105,6 +97,10 @@ $subdirectories = getSubdirectories($uploadDir);
                                         <label for="files">Archivos y Carpetas</label>
                                         <input type="file" id="files" name="files[]" class="form-control" multiple webkitdirectory directory>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="singleFiles">Archivos Individuales</label>
+                                        <input type="file" id="singleFiles" name="singleFiles[]" class="form-control" multiple>
+                                    </div>
                                     <button type="button" class="btn btn-primary mt-3" onclick="uploadFiles()">Subir</button>
                                 </form>
                             </div>
@@ -125,10 +121,16 @@ function uploadFiles() {
     var formData = new FormData(form);
 
     var filesInput = document.getElementById('files');
+    var singleFilesInput = document.getElementById('singleFiles');
 
     // Adjuntar archivos con rutas relativas
     for (var i = 0; i < filesInput.files.length; i++) {
         formData.append('files[]', filesInput.files[i], filesInput.files[i].webkitRelativePath);
+    }
+
+    // Adjuntar archivos individuales
+    for (var i = 0; i < singleFilesInput.files.length; i++) {
+        formData.append('singleFiles[]', singleFilesInput.files[i], singleFilesInput.files[i].name);
     }
 
     $.ajax({

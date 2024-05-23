@@ -6,13 +6,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// Check if the user has the required permissions
-/* if (!isset($_SESSION['role']) || !in_array('uploader', explode(',', $_SESSION['role']))) {
-    $_SESSION['error_message'] = "Acceso Denegado. Solo los usuarios con permiso pueden acceder a esta página.";
-    header("Location: 403.php");
-    exit;
-} */
-
 $uploadDir = 'uploads/';
 $targetDir = isset($_POST['targetDir']) ? $_POST['targetDir'] : '';
 
@@ -39,7 +32,6 @@ function createDirectories($filePath) {
     }
 }
 
-
 // Manejar las cargas de archivos
 foreach ($_FILES['files']['name'] as $key => $name) {
     if ($_FILES['files']['error'][$key] === UPLOAD_ERR_OK) {
@@ -47,6 +39,15 @@ foreach ($_FILES['files']['name'] as $key => $name) {
         $relativePath = $_FILES['files']['full_path'][$key];  // Usando full_path para obtener el webkitRelativePath
         $filePath = $uploadDir . $relativePath;
         createDirectories($filePath);
+        move_uploaded_file($tmpName, $filePath);
+    }
+}
+
+// Manejar las cargas de archivos individuales
+foreach ($_FILES['singleFiles']['name'] as $key => $name) {
+    if ($_FILES['singleFiles']['error'][$key] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['singleFiles']['tmp_name'][$key];
+        $filePath = $uploadDir . $name;
         move_uploaded_file($tmpName, $filePath);
     }
 }
