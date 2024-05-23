@@ -13,7 +13,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 } */
 
-// Function to get subdirectories within the 'uploads' directory
+
+// Función para obtener los subdirectorios dentro del directorio 'uploads'
 function getSubdirectories($dir) {
     $subdirs = [];
     foreach (scandir($dir) as $item) {
@@ -125,7 +126,7 @@ function uploadFiles() {
 
     var filesInput = document.getElementById('files');
 
-    // Append files with relative paths
+    // Adjuntar archivos con rutas relativas
     for (var i = 0; i < filesInput.files.length; i++) {
         formData.append('files[]', filesInput.files[i], filesInput.files[i].webkitRelativePath);
     }

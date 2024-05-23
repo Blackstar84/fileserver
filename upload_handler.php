@@ -39,11 +39,12 @@ function createDirectories($filePath) {
     }
 }
 
-// Handle file uploads
+
+// Manejar las cargas de archivos
 foreach ($_FILES['files']['name'] as $key => $name) {
     if ($_FILES['files']['error'][$key] === UPLOAD_ERR_OK) {
         $tmpName = $_FILES['files']['tmp_name'][$key];
-        $relativePath = $_FILES['files']['full_path'][$key];  // Using full_path to get the webkitRelativePath
+        $relativePath = $_FILES['files']['full_path'][$key];  // Usando full_path para obtener el webkitRelativePath
         $filePath = $uploadDir . $relativePath;
         createDirectories($filePath);
         move_uploaded_file($tmpName, $filePath);
