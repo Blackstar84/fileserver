@@ -107,7 +107,7 @@ foreach ($items as $item) {
                                                     <input class="form-check-input" type="checkbox" name="folders[]" value="<?= urlencode(isset($_GET['dir']) ? $_GET['dir'] . '/' . $directory : $directory) ?>">
                                                     <label class="form-check-label">
                                                         <a href="?dir=<?= urlencode(isset($_GET['dir']) ? $_GET['dir'] . '/' . $directory : $directory) ?>">
-                                                            <i class="fas fa-folder"></i> <?= htmlspecialchars($directory) ?>
+                                                            <i class="fas fa-folder-open"></i> <?= htmlspecialchars($directory) ?>
                                                         </a>
                                                     </label>
                                                 </div>
